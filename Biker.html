@@ -1,0 +1,152 @@
+<!Doctype html>
+<html>
+<head>
+<title>
+  Biker
+</title>
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>
+$(document).ready(
+  function()
+  {
+    var canvas=document.getElementById('mycanvas');
+    var cont=canvas.getContext('2d');
+    var cw=canvas.width;
+    var ch=canvas.height;
+    var gap=150;
+    var obstacle;
+    var time=0;
+    var ph=25;
+    var vx=5,vy=-10;
+    var score=0;
+    var image;
+    var data;
+    var myint,myint2;
+    var check1=0;
+    var player=
+    {
+      x1:cw/2,
+      y1:(3*ch)/4
+    };
+    function init()
+    {
+      obstacle=[];
+      score=0;
+      player.x1=cw/2;
+      player.y1=(3*ch)/4;
+      vx=5;
+      vy=-10;
+      time=0;
+      create_obstacle();
+      myint=setInterval(draw,20);
+    }
+
+    init();
+    $(document).keydown(
+      function(e)
+      {
+        var key=event.which;
+        if(key==37)
+        {
+          vy=-9;
+          vx=-5;
+        }
+        if(key==39)
+        {
+          vy=-9;
+          vx=5;
+        }
+      }
+    )
+    function create_obstacle( )
+    {
+      var value=Math.floor(Math.random()*350);
+      var value2=350-value;
+      obstacle.unshift(
+        {
+        y1:0,
+        w1:value,
+        y2:0,
+        w2:value2
+      }
+    );
+      //var r=Math.floor(Math.random()*254);
+      //var g=Math.floor(Math.random()*254);
+      //var b=Math.floor(Math.random()*254);
+      //cont.fillStyle="rgba("+r+","+g+","+b+","+"85"+")";
+      //cont.fillRect(0,0,value,50);
+      //cont.fillRect(value+150,0,value2,50);
+    }
+    function refresh()
+    {
+      cont.fillStyle="black";
+      cont.clearRect(0,0,cw,ch);
+      cont.font="100px  Verdana";
+      cont.fillText(score,250,200);
+    }
+    function draw()
+    {
+      time++;
+      cont.fillStyle="#eee";
+      cont.fillRect(0,0,cw,ch);
+      cont.fillStyle="black";
+      cont.strokeRect(0,0,cw,ch);
+      player.x1=player.x1+vx;
+      player.y1=player.y1+vy;
+      vy=vy+1;
+      cont.fillRect(player.x1,player.y1,15,15);
+      cont.fillStyle="lightblue";
+      if(obstacle[(obstacle.length)-1].y1>ch*0.94)
+      {
+        obstacle.pop();
+        score++;
+      }
+      if(time==90)
+      {
+        time=0;
+        create_obstacle();
+      }
+      for(var key in obstacle)
+      {
+        /*if
+        {
+          clearInterval(myint);
+          alert("boundary breached");
+          refresh();
+          setTimeout(function()
+        {
+          init();
+        },3000);
+        }
+        */
+        if(((player.y1+20>obstacle[key].y1 && player.y1-20<obstacle[key].y1) && (player.x1<obstacle[key].w1||player.x1>obstacle[key].w1+150))
+        ||(player.y1>490 || player.x1>490||player.y1<5||player.x1<5))
+          {
+              refresh();
+              clearInterval(myint);
+              setTimeout(function(){
+              init();
+              },3000);
+              break;
+          }
+      }
+      for(var key in obstacle)
+      {
+      cont.fillRect(0,obstacle[key].y1,obstacle[key].w1,10);
+      cont.fillRect(obstacle[key].w1+150,obstacle[key].y2,obstacle[key].w2,10);
+      obstacle[key].y1=obstacle[key].y1+2;
+      obstacle[key].y2=obstacle[key].y2+2;
+      }
+      cont.fillStyle="black";
+      cont.font="20px Verdana";
+      cont.fillText(score,5,495);
+    }
+  }
+);
+</script>
+<body>
+  <canvas id="mycanvas" width="500" height="500">
+</body>
+</head>
+</html>

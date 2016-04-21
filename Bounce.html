@@ -1,0 +1,100 @@
+<!Doctype html>
+<html>
+<head>
+  <title>
+    Football
+  </title>
+  <meta charset="utf-8">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>
+$(document).ready(
+  function()
+  {
+    var canvas=document.getElementById('mycanvas');
+    var cont=canvas.getContext('2d');
+    var cw=canvas.width;
+    var ch=canvas.height;
+    var player;
+    var myint;
+    var ay=1;
+    var vy=0;
+    var vx=0;
+    var ax=0;
+    var count=0;
+    var score=0;
+    function init()
+    {
+      player={
+        cx:250,
+        cy:250,
+        r:40
+      };
+      myint=setInterval(draw,25);
+    }
+    init();
+    function draw(){
+      if(player.cy>=440)
+      {
+        vy=Math.floor(-vy/2);
+        player.cy=440;
+        count++;
+        score=0;
+        if(count>=4)
+        {
+            ay=0;
+            vy=0;
+            vx=0;
+        }
+      }
+      if(player.cx+player.r>=500)
+      {
+        vx=-(vx)*0.5;
+        player.cx=462;
+      }
+      if(player.cx-player.r<=0)
+      {
+        vx=-(vx)*0.5;
+        player.cx=42;
+      }
+      cont.fillStyle="lightblue";
+      cont.fillRect(0,ch-20,cw,20);
+      cont.fillStyle="#EEE";
+      cont.fillRect(0,0,cw,ch-20);
+      cont.fillStyle="rgb(181,74,85)";
+      cont.strokeStyle="black";
+      cont.lineWidth=5  ;
+      cont.beginPath();
+      cont.arc(player.cx,player.cy,player.r,0,Math.PI*2,false);
+      cont.closePath();
+      cont.fill();
+      cont.stroke();
+      player.cy=player.cy+vy;
+      player.cx=player.cx+vx;
+      vy=ay+vy;
+      cont.font="20px Verdana";
+      cont.fillText(score,5,495);
+    }
+    canvas.addEventListener("click",click1,false);
+    function click1(e)
+    {
+      var offset=$(canvas).offset();
+      var x=event.clientX-offset.left;
+      var y=event.clientY-offset.top;
+      if((x>=player.cx-40&&x<=player.cx+40) && (y>=player.cy-40 &&y<=player.cy+40))
+      {
+        score++;
+        count=0;
+        vy=-20;
+        ay=1;
+        diff=player.cx-x;
+        vx=diff*0.3;
+      }
+    }
+  }
+);
+</script>
+</head>
+<body>
+  <canvas id="mycanvas" height="500" width="500"></canvas>
+</body>
+</html>
