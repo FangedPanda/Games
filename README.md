@@ -1,2 +1,2 @@
 # Games
- A Project  of 2 games in html canvas
+ Html based mini games which can be played on any device.
